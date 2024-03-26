@@ -15,6 +15,8 @@ public class SanfordPlayer extends Player {
     protected void takePlayerTurn() {
         HandRanks handRanks = evaluatePlayerHand();
         System.out.println(handRanks);
+        System.out.println(" : "+ getGameState().getNumRoundStage());
+
 
 
         switch (handRanks) {
@@ -28,7 +30,7 @@ public class SanfordPlayer extends Player {
                 break;
 
 
-
+//
 
             case TWO_PAIR:
                 //raise 25%
