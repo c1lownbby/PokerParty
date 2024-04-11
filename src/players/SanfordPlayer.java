@@ -5,6 +5,7 @@ import game.Player;
 import java.lang.System;
 
 public class SanfordPlayer extends Player {
+    //play safe but try to call people's bluff
     public SanfordPlayer(String name) {
         super(name);
     }
@@ -16,14 +17,14 @@ public class SanfordPlayer extends Player {
         System.out.println(" : " + getGameState().getNumRoundStage());
 
 
-        if (shouldFold()) {
-            fold();
-        } else if (shouldCheck()) {
+        if (shouldCheck()) {
             check();
+        } else if (shouldFold()) {
+            fold();
         } else if (shouldCall()) {
             call();
         } else if (shouldRaise()) {
-            raise();
+            raise(getGameState().getTableMinBet());
         } else if (shouldAllIn()) {
             allIn();
         }
@@ -37,7 +38,7 @@ public class SanfordPlayer extends Player {
 
     @Override
     protected boolean shouldFold() {
-        // Always check if possible (check when there is no bet on the table)
+        // always check if possible (check when there is no bet on the table)
         if (!getGameState().isActiveBet()) {
             return false;
         }
@@ -48,7 +49,7 @@ public class SanfordPlayer extends Player {
 
     @Override
     protected boolean shouldCall() {
-        // Always check if possible (check when there is no bet on the table)
+        // always check if possible (check when there is no bet on the table)
         if (!getGameState().isActiveBet()) {
             return true;
         }
@@ -60,18 +61,20 @@ public class SanfordPlayer extends Player {
         switch (handRanks) {
             case HIGH_CARD:
             case PAIR:
+                callPercentage = .10; // Call if the bet is 25% or less of the player's bank
+                break;
             case TWO_PAIR:
-                callPercentage = 0.25; // Call if the bet is 25% or less of the bankroll
+                callPercentage = 0.25; // Call if the bet is 25% or less of the player's bank
                 break;
             case THREE_OF_A_KIND:
             case STRAIGHT:
             case FLUSH:
-                callPercentage = 0.5; // Call if the bet is 50% or less of the bankroll
+                callPercentage = 0.5; // Call if the bet is 50% or less of the player's bank
                 break;
             case FULL_HOUSE:
             case FOUR_OF_A_KIND:
             case STRAIGHT_FLUSH:
-                callPercentage = 0.8; // Call if the bet is 80% or less of the bankroll
+                callPercentage = 0.8; // Call if the bet is 80% or less of the player's bank
                 break;
             case ROYAL_FLUSH:
                 return true; // Always call for a Royal Flush
@@ -81,27 +84,53 @@ public class SanfordPlayer extends Player {
         double currentBet = getGameState().getTableBet();
         double remainingBet = maxBetAllowed - currentBet;
 
-        // Check if the remaining bet is non-negative
+        // Check if the remaining bet is pos
         return remainingBet >= 0;
     }
 
     @Override
     protected boolean shouldRaise() {
-        // Always check if possible (check when there is no bet on the table)
-        if (!getGameState().isActiveBet()) {
-            return false;
-        }
+        // always check if possible (check when there is no bet on the table)
+
+
 
         // Hand evaluation
         HandRanks handRanks = evaluatePlayerHand();
 
-        boolean hasPair = handRanks.getValue() >= HandRanks.PAIR.getValue();
-        boolean hasTwoPair = handRanks.getValue() >= HandRanks.TWO_PAIR.getValue();
-        boolean hasThreeOfAKind = handRanks.getValue() >= HandRanks.THREE_OF_A_KIND.getValue();
-        boolean straight = handRanks.getValue() >= HandRanks.STRAIGHT.getValue();
-        boolean flush = handRanks.getValue() >= HandRanks.FLUSH.getValue();
-        boolean fourOfAKind = handRanks.getValue() >= HandRanks.FOUR_OF_A_KIND.getValue();
-        boolean straightFlush = handRanks.getValue() >= HandRanks.STRAIGHT_FLUSH.getValue();
+        switch (handRanks) {
+            case HIGH_CARD:
+            case PAIR:
+                //raise by 10% of current bank
+
+                break;
+            case TWO_PAIR:
+                //raise by 15% of current bank
+
+                break;
+            case THREE_OF_A_KIND:
+            case STRAIGHT:
+                //raise by 25% of current bank
+
+                break;
+            case FLUSH:
+                //raise by 30% of current bank
+
+                break;
+            case FULL_HOUSE:
+                //raise by 35% of current bank
+
+                break;
+            case FOUR_OF_A_KIND:
+                //raise by 40% of current bank
+
+                break;
+            case STRAIGHT_FLUSH:
+                //raise by 60% of current bank
+
+                break;
+            case ROYAL_FLUSH:
+                return true; // Always call for a Royal Flush
+        }
 
         boolean betIsSmallPercentageOfBank = getGameState().getTableBet() < getBank() * 0.05;
         return betIsSmallPercentageOfBank;
@@ -109,12 +138,12 @@ public class SanfordPlayer extends Player {
 
     @Override
     protected boolean shouldAllIn() {
-        // Always check if possible (check when there is no bet on the table)
+        // Check when there is no active bet
         if (!getGameState().isActiveBet()) {
             return false;
         }
 
-        // All in only with royal flush
+        // All in only with royal flush only if there is no check
         return evaluatePlayerHand().getValue() >= HandRanks.FULL_HOUSE.getValue();
     }
 }

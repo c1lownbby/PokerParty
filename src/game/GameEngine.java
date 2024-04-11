@@ -82,9 +82,9 @@ public class GameEngine {
         // Add NPC players to the game. These methods should be defined to add specific types of NPC players.
 
         //listPlayersRemainingGame.add(new AdamsPlayer("BCA"));
-        //listPlayersRemainingGame.add(new ManualPlayer("Manual"));
-        addConservativeNPCs(2);
-        addSimpleNPCs(2);
+        listPlayersRemainingGame.add(new SanfordPlayer("Sanford"));
+        addConservativeNPCs(0);
+        addSimpleNPCs(4);
         addRandomNPCs(0);
         //addTempPlayers(2);
         Collections.shuffle(listPlayersRemainingGame);
