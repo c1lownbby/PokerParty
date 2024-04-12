@@ -83,9 +83,11 @@ public class GameEngine {
 
         //listPlayersRemainingGame.add(new AdamsPlayer("BCA"));
         listPlayersRemainingGame.add(new SanfordPlayer("Sanford"));
+        listPlayersRemainingGame.add(new SanfordPlayer("Sanford2"));
+
         addConservativeNPCs(0);
         addSimpleNPCs(4);
-        addRandomNPCs(0);
+        addRandomNPCs(1);
         //addTempPlayers(2);
         Collections.shuffle(listPlayersRemainingGame);
 

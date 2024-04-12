@@ -19,15 +19,17 @@ public class SanfordPlayer extends Player {
 
         if (shouldCheck()) {
             check();
-        } else if (shouldFold()) {
-            fold();
         } else if (shouldCall()) {
             call();
         } else if (shouldRaise()) {
             raise(getGameState().getTableMinBet());
         } else if (shouldAllIn()) {
             allIn();
+        } else if (shouldFold()) {
+            fold();
         }
+        //fold only when nothing else can be done
+
     }
 
     @Override
@@ -61,7 +63,7 @@ public class SanfordPlayer extends Player {
         switch (handRanks) {
             case HIGH_CARD:
             case PAIR:
-                callPercentage = .10; // Call if the bet is 25% or less of the player's bank
+                callPercentage = .10; // Call if the bet is 10% or less of the player's bank
                 break;
             case TWO_PAIR:
                 callPercentage = 0.25; // Call if the bet is 25% or less of the player's bank
@@ -96,37 +98,38 @@ public class SanfordPlayer extends Player {
 
         // Hand evaluation
         HandRanks handRanks = evaluatePlayerHand();
+        double betPercentage = 0;
 
         switch (handRanks) {
             case HIGH_CARD:
             case PAIR:
                 //raise by 10% of current bank
-
+                betPercentage = 0.1;
                 break;
             case TWO_PAIR:
                 //raise by 15% of current bank
-
+                betPercentage = 0.15;
                 break;
             case THREE_OF_A_KIND:
             case STRAIGHT:
                 //raise by 25% of current bank
-
+                betPercentage = 0.25;
                 break;
             case FLUSH:
                 //raise by 30% of current bank
-
+                betPercentage = 0.3;
                 break;
             case FULL_HOUSE:
                 //raise by 35% of current bank
-
+                betPercentage = 0.35;
                 break;
             case FOUR_OF_A_KIND:
                 //raise by 40% of current bank
-
+                betPercentage = 0.4;
                 break;
             case STRAIGHT_FLUSH:
-                //raise by 60% of current bank
-
+                //raise by 75% of current bank
+                betPercentage = 0.75;
                 break;
             case ROYAL_FLUSH:
                 return true; // Always call for a Royal Flush
