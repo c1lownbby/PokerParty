@@ -16,7 +16,7 @@ public class SanfordPlayer extends Player {
         System.out.println(handRanks);
         System.out.println(" : " + getGameState().getNumRoundStage());
 
-        // calculate a random number between 0 and 1
+        // create random number between 0 and 1
         double randomValue = Math.random();
 
         if (shouldCheck()) {
@@ -137,7 +137,7 @@ public class SanfordPlayer extends Player {
                 return true; // go all-in for royal flush
         }
 
-        // calculate the bet amount as a percentage of the NPC's bank
+        // checks the bet amount as a percentage of the NPC's bank
         int betAmount = (int) (getBank() * betPercentage);
 
         // double checks that the bet amount is at least the minimum bet required
