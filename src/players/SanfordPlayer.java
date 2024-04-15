@@ -170,6 +170,6 @@ public class SanfordPlayer extends Player {
     @Override
     protected boolean shouldAllIn() {
         // all in only with royal flush only if there is no check
-        return evaluatePlayerHand().getValue() >= HandRanks.FULL_HOUSE.getValue();
+        return evaluatePlayerHand().getValue() >= HandRanks.ROYAL_FLUSH.getValue();
     }
 }
