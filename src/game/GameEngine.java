@@ -87,7 +87,7 @@ public class GameEngine {
 
         addConservativeNPCs(0);
         addSimpleNPCs(4);
-        addRandomNPCs(1);
+        addRandomNPCs(0);
         //addTempPlayers(2);
         Collections.shuffle(listPlayersRemainingGame);
 
