@@ -27,8 +27,10 @@ public class SanfordPlayer extends Player {
             } else {
                 check();
             }
+            //checks if they call next instead of raising
         } else if (shouldCall()) {
             call();
+            //checks to raise next
         } else if (shouldRaise()) {
             int betAmount = (int) (getBank() * getRaisePercentage(handRanks));
             raise(betAmount);
@@ -50,9 +52,19 @@ public class SanfordPlayer extends Player {
 
     @Override
     protected boolean shouldFold() {
-        // only fold with bad hand at high bets
-        return evaluatePlayerHand().getValue() < HandRanks.PAIR.getValue() && getGameState().getTableBet() > getBank() * 0.1;
+        // check if the current round is after the pre-flop round and if there are no other options
+        if (getGameState().getNumRoundStage() > 0 && !shouldRaise() && !shouldCall()) {
+            // checks the max bet (30% of NPC bank)
+            double maxBetAllowed = getBank() * 0.30;
+            // makes sure it does not exceed 30%
+            if (getGameState().getTableBet() > maxBetAllowed) {
+                return true; // fold if the bet is more than 30%
+            }
+        }
+        return false; // otherwise, don't fold
     }
+
+
 
     @Override
     protected boolean shouldCall() {
@@ -125,20 +137,21 @@ public class SanfordPlayer extends Player {
                 return true; // go all-in for royal flush
         }
 
-        // Calculate the bet amount as a percentage of SanfordPlayer's bankroll
+        // calculate the bet amount as a percentage of the NPC's bank
         int betAmount = (int) (getBank() * betPercentage);
 
-        // Ensure that the bet amount is at least the minimum bet required
+        // double checks that the bet amount is at least the minimum bet required
         if (betAmount >= getGameState().getTableMinBet()) {
-            // Raise by the rounded amount
+            // raises by the rounded amount (double to int)
             raise(betAmount);
             return true;
         } else {
-            // If the calculated bet amount is less than the minimum bet, do not raise
+            // if the calculated bet isn't what's expected don't raise
             return false;
         }
     }
 
+    //created to fix issues within the raise function, ensuring the player only raises by certain percentages
     private double getRaisePercentage(HandRanks handRanks) {
         // define raise percentages for different hand ranks
         switch (handRanks) {
