@@ -21,7 +21,7 @@ public class SanfordPlayer extends Player {
 
         if (shouldCheck()) {
             // mostly check to play safe, but randomly raise instead of checking to throw people off
-            if (randomValue < 0.45) { // 45% chance of raising
+            if (randomValue < 0.35) { // 35% chance of raising
                 int betAmount = (int) (getBank() * getRaisePercentage(handRanks));
                 raise(betAmount);
             } else {
@@ -97,8 +97,10 @@ public class SanfordPlayer extends Player {
 
         switch (handRanks) {
             case HIGH_CARD:
+                betPercentage = 0.05; // 5% raise for  pair
+                break;
             case PAIR:
-                betPercentage = 0.10; // 10% raise for high card and pair
+                betPercentage = 0.10; // 10% raise for  pair
                 break;
             case TWO_PAIR:
                 betPercentage = 0.15; // 15% raise for two pairs
@@ -141,8 +143,9 @@ public class SanfordPlayer extends Player {
         // define raise percentages for different hand ranks
         switch (handRanks) {
             case HIGH_CARD:
+                return 0.05; // 5% raise for high card
             case PAIR:
-                return 0.10; // 10% raise for high card and pair
+                return 0.10; // 10% raise for pair
             case TWO_PAIR:
                 return 0.15; // 15% raise for two pairs
             case THREE_OF_A_KIND:
